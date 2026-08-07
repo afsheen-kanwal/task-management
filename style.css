@@ -1,0 +1,292 @@
+body {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-size: smaller;
+    font-style: normal;
+
+
+}
+
+
+img {
+    padding: 10px;
+}
+
+.head {
+    display: flex;
+    width: 80%;
+}
+
+.mainleftside {
+    display: flex;
+    width: 20%;
+    background-color: rgb(255, 255, 255);
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    padding-top: 20px;
+}
+
+.dashboard {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard>button {
+    padding: 10px;
+    width: 70%;
+    color: black;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(105, 41, 243);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lists {
+    background-color: rgb(243, 243, 243);
+    width: 70%;
+    margin: 20px;
+    font-size: larger;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+
+}
+
+.lists h3 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-weight: normal;
+}
+
+.bi-list-ul {
+    fill: black !important;
+}
+
+.bi-check-circle-fill {
+    fill: #28a745 !important;
+}
+
+.bi-stopwatch {
+    fill: #ffc107 !important;
+}
+
+.bi-star-fill {
+    fill: #dc3545 !important;
+}
+
+.lists2 {
+
+    background-color: rgb(251, 246, 246);
+    width: 70%;
+    margin: 10px;
+    font-size: larger;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+
+
+}
+
+.lists2 h3 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-weight: normal;
+}
+
+.life {
+    margin-top: 20px;
+    display: flex;
+    text-align: left;
+    gap: 20px;
+}
+
+.life>img {
+    width: 25%;
+}
+
+P {
+    font-size: small;
+}
+
+.one {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 50%;
+
+    display: flex;
+}
+
+.one h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.one p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 0 0;
+}
+
+
+.two {
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: rgb(0, 0, 0);
+}
+
+
+.two>button {
+    background-color: rgb(173, 46, 46);
+    border: 2px solid black;
+    border-radius: 70%;
+    margin: 10px;
+}
+
+.two h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.two img {
+
+    height: 30px;
+}
+
+
+.mainleftside {
+    width: 280px;
+    min-width: 280px;
+
+}
+
+
+.main-content-right {
+    width: calc(100% - 280px);
+    padding: 20px;
+
+}
+
+
+.header {
+    display: flex;
+    color: black;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+
+
+
+.name-badge {
+    border: none;
+    color: white;
+    padding: 20px;
+    border-radius: 100%;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.second {
+    padding: 20px;
+    margin: 10px;
+    height: 50PX;
+    display: flex;
+    border-radius: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: xx-large;
+    justify-content: space-around;
+    margin-top: 20px;
+
+}
+
+#name-avatar {
+    background-color: rgb(138, 9, 245);
+
+
+
+}
+
+#select-priority {
+    height: 100%;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+#add-task {
+    width: 45%;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: large;
+}
+
+.task-date {
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.task-btn {
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.task {
+    padding: auto;
+    border-radius: 20px;
+    background-color: #cfe9f7;
+}
+
+#text {
+    color: rgb(173, 4, 246);
+    padding-top: 10px;
+    margin-top: 10px;
+    padding-left: 8px;
+}
+
+.task-btn {
+    background-color: rgb(128, 0, 255);
+    color: rgb(255, 255, 255);
+}
+
+.boxes {
+
+    display: flex;
+    justify-content: space-around;
+}
+
+
+
+.total-task,
+.completed,
+.pending,
+.important {
+    display: flex;
+    width: 20%;
+    border-radius: 20px;
+    box-shadow: 1px 1px 1px 1px #e4d3d3;
+
+
+}

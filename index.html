@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Sign Up</title>
+    <link rel="stylesheet" href="./dashboard.html">
+</head>
+<style>
+ 
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #d0e7ec, #bc6ce4, #edb2b6);
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 🌟 MAIN FLEX ROW CONTAINER (Jo aamne-samne lany ke liye sab se zaroori hai) */
+.form-row-container {
+    display: flex;
+    flex-direction: row; /* Hamesha side-by-side rakhega desktop par */
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 40px;
+}
+
+.image-box img {
+    height:150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+
+.sign {
+    background: linear-gradient(145deg, #818cf8, #6366f1);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+    padding: 35px 25px;
+    color: white;
+    border-radius: 20px;
+    flex: 1; /* Blue box ko barabar space milegi */
+    max-width: 450px;
+    width: 100%;
+}
+
+/* Form Groups Layout */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    width: 35%;
+    font-weight: 600;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input {
+    width: 65%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    color: #333;
+}
+
+/* Submit Button Setting */
+.btn-sub {
+    display: block;
+    margin: 25px auto 0 auto;
+    background: linear-gradient(to right, #00f2fe, #4facfe);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    width: 60%;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(79, 172, 254, 0.4);
+}
+
+/* Headings aur Paragraph Design */
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+h1 {
+    text-align: center;
+    color: #1a1a1a;
+    font-size: 32px;
+    margin: 0 0 30px 0;
+}
+
+.para {
+    max-width: 700px;
+    text-align: center;
+}
+
+.para p {
+    font-size: 15px;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+/* 📱 MOBILE VIEW: Sirf chote mobile screens par vertical hoga */
+@media (max-width: 650px) {
+    .form-row-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .form-group label {
+        width: 100%;
+        margin-bottom: 6px;
+    }
+    .form-group input {
+        width: 100%;
+    }
+    .btn-sub {
+        width: 100%;
+    }
+}
+
+</style>
+
+<body>
+   <body>
+    <h2>your task manager</h2>
+    <h1>Sign Up Here</h1>
+    
+    <!-- 🌟 YEH WRAPPER DONO CHEEZON KO INLINE (AAMNE-SAMNE) RAKHEGA -->
+    <div class="form-row-container"> 
+        
+        <!-- Left Side Image -->
+        <div class="image-box">
+            <img  src="https://miro.medium.com/1*8G1vA7egoxrL4Bb7RAgnPQ.jpeg" alt="task manager illustration">
+        </div>
+
+        <!-- Right Side Blue Form Box -->
+        <div class="sign">
+            <div class="form-group">
+                <label for="username">Name :</label>
+                <input type="text" placeholder="enter your name" id="username">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" placeholder="enter your email" id="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password :</label>
+                <input type="password" placeholder="enter strong password" id="password">
+            </div>
+
+            <div class="form-group">
+                <label for="re-password">Re-password :</label>
+                <input type="password" placeholder="enter your password" id="re-password">
+            </div>
+
+            <button class="btn-sub" onclick="submit()">Submit</button>
+        </div>
+
+    </div> <!-- Wrapper End -->
+
+    <!-- Bottom Description Paragraphs -->
+    <div class="para">
+        <p>Manage your daily tasks, set priorities, and track your progress all in one place. Sign up now to boost your productivity and stay organized every day.</p>
+        <p>The easiest way to organize your tasks, stay focused, and achieve your daily goals. Join us today!</p>
+    </div>
+</body>
+
+<!-- 
+    <script>
+        function submit() {
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let rePassword = document.getElementById('re-password').value;
+
+            if (email === "" || password === "" || rePassword === "") {
+                alert("plz fill all feild accurately");
+                return;
+            }
+
+            if (password !== rePassword) {
+                alert("password not matched check it again ");
+                return;
+            }
+
+
+            alert("Good your form fill successfully");
+        } -->
+
+<script>
+   function submit() {
+    var name = document.getElementById("username").value; // Naya variable
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var rePassword = document.getElementById('re-password').value;
+
+    if (name === "" || email === "" || password === "" || rePassword === "") {
+        alert('Plz fill all the fields!');
+        return; 
+    }
+
+    if (password !== rePassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    // Local Storage me save karna
+    localStorage.setItem('Username', name); // Name save ho gaya
+    localStorage.setItem('Email', email);
+    localStorage.setItem('Password', password);
+
+    alert("Sign-up successful!");
+    window.location.href = "dashboard.html";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function submit() {
+//     var email = document.getElementById('email').value
+//     var password = document.getElementById('password').value
+//     if (localStorage.getItem('Email') === email && localStorage.getItem('Password') === password) {
+       
+//     }
+// }
+
+// var loggedInUser = localStorage.getItem('Email');
+
+// if (loggedInUser) {
+//     document.getElementById('displayEmail').innerText = "Logged in as: " + loggedInUser;
+// } else {
+//     document.getElementById('displayEmail').innerText = "Logged in as: Guest";
+// }
+
+
+
+
+
+
+
+</script>
+<!-- 
+    </script> -->
+
+</body>
+
+</html>
