@@ -1,341 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager - Sign Up</title>
-    <link rel="stylesheet" href="./dashboard.html">
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task Manager - Sign Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
 <style>
- 
-
-* {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #d0e7ec, #bc6ce4, #edb2b6);
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
     min-height: 100vh;
-    margin: 0;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    display: grid; place-items: center; padding: 24px;
+  }
+  h1, h2 { font-family: "Bricolage Grotesque", "Segoe UI", sans-serif; }
 
-/* 🌟 MAIN FLEX ROW CONTAINER (Jo aamne-samne lany ke liye sab se zaroori hai) */
-.form-row-container {
-    display: flex;
-    flex-direction: row; /* Hamesha side-by-side rakhega desktop par */
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    width: 100%;
-    max-width: 1000px;
-    margin-bottom: 40px;
-}
+  .card {
+    width: min(1000px, 100%); display: grid; grid-template-columns: 1.05fr 1fr;
+    background: var(--card); border-radius: 28px; overflow: hidden;
+    box-shadow: 0 30px 60px -25px var(--shadow);
+    animation: cardIn .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
 
-.image-box img {
-    height:150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .board {
+    background: var(--accent); color: var(--on-accent); padding: 48px 40px;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+  }
+  .board h2 { font-size: 2rem; line-height: 1.15; font-weight: 800; }
+  .board p { color: rgba(255,255,255,.82); margin-top: 12px; line-height: 1.6; max-width: 36ch; }
 
-}
+  .tasks { list-style: none; display: grid; gap: 12px; }
+  .tasks li {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,.14); border-radius: 14px; padding: 14px 16px; font-weight: 500;
+  }
+  .tick { width: 24px; height: 24px; flex: none; border: 2px solid rgba(255,255,255,.6); border-radius: 8px; display: grid; place-items: center; }
+  .tick svg { width: 14px; height: 14px; stroke: #0d2b22; opacity: 0; }
+  .tag { margin-left: auto; font-size: .75rem; font-style: normal; background: rgba(255,255,255,.2); padding: 3px 10px; border-radius: 99px; }
+  .tasks li.auto .tick { animation: fillTick .4s forwards; }
+  .tasks li.auto .tick svg { animation: showTick .4s forwards; }
+  .tasks li.auto span.txt { animation: strike .4s forwards; }
+  .tasks li:nth-child(1).auto * { animation-delay: .9s; }
+  .tasks li:nth-child(2).auto * { animation-delay: 1.7s; }
+  .tasks li:nth-child(3).auto * { animation-delay: 2.5s; }
+  @keyframes fillTick { to { background: var(--mint); border-color: var(--mint); } }
+  @keyframes showTick { to { opacity: 1; } }
+  @keyframes strike { to { text-decoration: line-through; opacity: .75; } }
 
+  .form-side { padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; }
+  .form-side h1 { font-size: 2rem; font-weight: 800; }
+  .sub { color: var(--muted); margin: 8px 0 28px; }
 
+  .field { position: relative; margin-bottom: 18px; }
+  .field input {
+    width: 100%; padding: 22px 16px 8px; border: 2px solid var(--line); border-radius: 14px;
+    font: inherit; color: var(--ink); background: var(--soft);
+    transition: border-color .2s, background-color .2s, box-shadow .2s;
+  }
+  .field label { position: absolute; left: 18px; top: 17px; color: var(--muted); pointer-events: none; transition: all .15s; }
+  .field input:focus { outline: none; border-color: var(--accent); background: var(--card); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .field input:focus + label, .field input:not(:placeholder-shown) + label { top: 6px; font-size: .72rem; color: var(--accent); }
+  .field.bad input { border-color: var(--high); }
+  .field .msg { display: none; color: var(--high); font-size: .8rem; margin: 6px 4px 0; }
+  .field.bad .msg { display: block; animation: shake .35s; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
-.sign {
-    background: linear-gradient(145deg, #818cf8, #6366f1);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
-    padding: 35px 25px;
-    color: white;
-    border-radius: 20px;
-    flex: 1; /* Blue box ko barabar space milegi */
-    max-width: 450px;
-    width: 100%;
-}
+  .eye { position: absolute; right: 12px; top: 14px; background: none; border: 0; cursor: pointer; color: var(--muted); font: inherit; font-size: .8rem; padding: 4px 6px; }
+  .eye:focus-visible, .go:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
 
-/* Form Groups Layout */
-.form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
+  .go {
+    width: 100%; margin-top: 6px; padding: 15px; border: 0; border-radius: 14px;
+    background: var(--accent); color: var(--on-accent); font: 600 1rem "DM Sans", sans-serif; cursor: pointer;
+    transition: background-color .2s, transform .15s, box-shadow .2s;
+  }
+  .go:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 10px 20px -8px var(--shadow); }
+  .go:active { transform: scale(.98); }
 
-.form-group label {
-    width: 35%;
-    font-weight: 600;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.form-group input {
-    width: 65%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.95);
-    padding: 12px 15px;
-    border-radius: 10px;
-    font-size: 15px;
-    outline: none;
-    color: #333;
-}
-
-/* Submit Button Setting */
-.btn-sub {
-    display: block;
-    margin: 25px auto 0 auto;
-    background: linear-gradient(to right, #00f2fe, #4facfe);
-    color: white;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    font-weight: bold;
-    width: 60%;
-    cursor: pointer;
-    box-shadow: 0 10px 20px rgba(79, 172, 254, 0.4);
-}
-
-/* Headings aur Paragraph Design */
-h2 {
-    text-align: center;
-    color: #2c3e50;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background: rgba(255, 255, 255, 0.4);
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    margin-bottom: 10px;
-}
-
-h1 {
-    text-align: center;
-    color: #1a1a1a;
-    font-size: 32px;
-    margin: 0 0 30px 0;
-}
-
-.para {
-    max-width: 700px;
-    text-align: center;
-}
-
-.para p {
-    font-size: 15px;
-    color: #4a5568;
-    line-height: 1.6;
-}
-
-/* 📱 MOBILE VIEW: Sirf chote mobile screens par vertical hoga */
-@media (max-width: 650px) {
-    .form-row-container {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .form-group {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .form-group label {
-        width: 100%;
-        margin-bottom: 6px;
-    }
-    .form-group input {
-        width: 100%;
-    }
-    .btn-sub {
-        width: 100%;
-    }
-}
-
+  @media (max-width: 800px) {
+    .card { grid-template-columns: 1fr; }
+    .board { padding: 32px 24px; order: 2; }
+    .form-side { padding: 32px 24px; order: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; }
+    .tasks li.auto * { animation-duration: .01s; animation-delay: 0s !important; }
+  }
 </style>
-
+</head>
 <body>
-   <body>
-    <h2>your task manager</h2>
-    <h1>Sign Up Here</h1>
-    
-    <!-- 🌟 YEH WRAPPER DONO CHEEZON KO INLINE (AAMNE-SAMNE) RAKHEGA -->
-    <div class="form-row-container"> 
-        
-        <!-- Left Side Image -->
-        <div class="image-box">
-            <img  src="https://miro.medium.com/1*8G1vA7egoxrL4Bb7RAgnPQ.jpeg" alt="task manager illustration">
-        </div>
 
-        <!-- Right Side Blue Form Box -->
-        <div class="sign">
-            <div class="form-group">
-                <label for="username">Name :</label>
-                <input type="text" placeholder="enter your name" id="username">
-            </div>
+<!-- Theme chunnain: Default / Light / Dark -->
+<div class="theme-switch floating" role="group" aria-label="Choose theme">
+  <button type="button" data-theme-btn="default" title="Default (purple)" aria-label="Default purple theme" style="--sw: linear-gradient(135deg,#5b3fd9,#c28aea)"></button>
+  <button type="button" data-theme-btn="light" title="Light (sky blue)" aria-label="Light theme" style="--sw: linear-gradient(135deg,#1b7fd1,#bfe0ff)"></button>
+  <button type="button" data-theme-btn="dark" title="Dark" aria-label="Dark theme" style="--sw: linear-gradient(135deg,#0f0d1c,#7a58f0)"></button>
+</div>
 
-            <div class="form-group">
-                <label for="email">Email :</label>
-                <input type="email" placeholder="enter your email" id="email">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password :</label>
-                <input type="password" placeholder="enter strong password" id="password">
-            </div>
-
-            <div class="form-group">
-                <label for="re-password">Re-password :</label>
-                <input type="password" placeholder="enter your password" id="re-password">
-            </div>
-
-            <button class="btn-sub" onclick="submit()">Submit</button>
-        </div>
-
-    </div> <!-- Wrapper End -->
-
-    <!-- Bottom Description Paragraphs -->
-    <div class="para">
-        <p>Manage your daily tasks, set priorities, and track your progress all in one place. Sign up now to boost your productivity and stay organized every day.</p>
-        <p>The easiest way to organize your tasks, stay focused, and achieve your daily goals. Join us today!</p>
+<main class="card">
+  <section class="board" aria-label="About Your Task Manager">
+    <div>
+      <h2>Your Task Manager</h2>
+      <p>Manage your daily tasks, set priorities and track your progress, all in one place.</p>
     </div>
-</body>
+    <ul class="tasks">
+      <li class="auto"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></span><span class="txt">Finish JavaScript quiz revision</span><em class="tag">High</em></li>
+      <li class="auto"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></span><span class="txt">Push project to GitHub</span><em class="tag">Medium</em></li>
+      <li class="auto"><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg></span><span class="txt">Update LinkedIn profile</span><em class="tag">Low</em></li>
+      <li><span class="tick"></span><span>Your next task goes here</span></li>
+    </ul>
+  </section>
 
-<!-- 
-    <script>
-        function submit() {
-            let email = document.getElementById('email').value;
-            let password = document.getElementById('password').value;
-            let rePassword = document.getElementById('re-password').value;
+  <section class="form-side">
+    <h1>Create your account</h1>
+    <p class="sub">It takes less than a minute to get started.</p>
 
-            if (email === "" || password === "" || rePassword === "") {
-                alert("plz fill all feild accurately");
-                return;
-            }
-
-            if (password !== rePassword) {
-                alert("password not matched check it again ");
-                return;
-            }
-
-
-            alert("Good your form fill successfully");
-        } -->
+    <form id="signupForm" novalidate>
+      <div class="field" id="f-name">
+        <input type="text" id="username" placeholder=" " autocomplete="name">
+        <label for="username">Name</label>
+        <div class="msg">Please enter your name.</div>
+      </div>
+      <div class="field" id="f-email">
+        <input type="email" id="email" placeholder=" " autocomplete="email">
+        <label for="email">Email</label>
+        <div class="msg">Enter a valid email, like name@example.com.</div>
+      </div>
+      <div class="field" id="f-pass">
+        <input type="password" id="password" placeholder=" " autocomplete="new-password">
+        <label for="password">Password</label>
+        <button type="button" class="eye" data-target="password">Show</button>
+        <div class="msg">Use at least 6 characters.</div>
+      </div>
+      <div class="field" id="f-repass">
+        <input type="password" id="re-password" placeholder=" " autocomplete="new-password">
+        <label for="re-password">Confirm password</label>
+        <button type="button" class="eye" data-target="re-password">Show</button>
+        <div class="msg">Passwords do not match.</div>
+      </div>
+      <button type="submit" class="go">Create account</button>
+    </form>
+  </section>
+</main>
 
 <script>
-   function submit() {
-    var name = document.getElementById("username").value; // Naya variable
-    var email = document.getElementById("email").value;
+  // show / hide password
+  document.querySelectorAll(".eye").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var input = document.getElementById(btn.dataset.target);
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.textContent = show ? "Hide" : "Show";
+    });
+  });
+
+  function setBad(id, bad) {
+    document.getElementById(id).classList.toggle("bad", bad);
+    return !bad;
+  }
+
+  function signUp(e) {
+    e.preventDefault();
+
+    var name = document.getElementById("username").value.trim();
+    var email = document.getElementById("email").value.trim();
     var password = document.getElementById("password").value;
-    var rePassword = document.getElementById('re-password').value;
+    var rePassword = document.getElementById("re-password").value;
 
-    if (name === "" || email === "" || password === "" || rePassword === "") {
-        alert('Plz fill all the fields!');
-        return; 
-    }
+    var a = setBad("f-name", name === "");
+    var b = setBad("f-email", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+    var c = setBad("f-pass", password.length < 6);
+    var d = setBad("f-repass", rePassword === "" || password !== rePassword);
 
-    if (password !== rePassword) {
-        alert('Passwords do not match!');
-        return;
-    }
+    if (!(a && b && c && d)) return;
 
-    // Local Storage me save karna
-    localStorage.setItem('Username', name); // Name save ho gaya
-    localStorage.setItem('Email', email);
-    localStorage.setItem('Password', password);
+    // same localStorage keys as before, dashboard reads 'Username'
+    localStorage.setItem("Username", name);
+    localStorage.setItem("Email", email);
+    localStorage.setItem("Password", password);
 
-    alert("Sign-up successful!");
     window.location.href = "dashboard.html";
-}
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function submit() {
-//     var email = document.getElementById('email').value
-//     var password = document.getElementById('password').value
-//     if (localStorage.getItem('Email') === email && localStorage.getItem('Password') === password) {
-       
-//     }
-// }
-
-// var loggedInUser = localStorage.getItem('Email');
-
-// if (loggedInUser) {
-//     document.getElementById('displayEmail').innerText = "Logged in as: " + loggedInUser;
-// } else {
-//     document.getElementById('displayEmail').innerText = "Logged in as: Guest";
-// }
-
-
-
-
-
-
-
+  document.getElementById("signupForm").addEventListener("submit", signUp);
 </script>
-<!-- 
-    </script> -->
-
 </body>
-
 </html>

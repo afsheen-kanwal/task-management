@@ -1,0 +1,145 @@
+/* =========================================================
+   theme.css - dono pages (index + dashboard) mein use hoti hai
+   3 themes: default (purple), light (sky blue), dark
+   Naya theme banana ho to bas ek naya [data-theme="..."] block add karo
+   ========================================================= */
+
+/* ---------- 1) DEFAULT (purple) ---------- */
+:root,
+[data-theme="default"] {
+    --bg1: #d9ecf0;
+    --bg2: #c28aea;
+    --bg3: #f0bcc0;
+    --blob1: #7c5cff;
+    --blob2: #ff9ccf;
+
+    --ink: #1e1b3a;
+    --muted: #5f5b86;
+    --card: #ffffff;
+    --soft: #f6f4ff;
+    --line: #e3dffa;
+
+    --accent: #5b3fd9;
+    --accent-hover: #3d27a8;
+    --on-accent: #ffffff;
+
+    --mint: #2fd6a4;
+    --high: #d6336c;
+    --medium: #e08a00;
+    --low: #3b82f6;
+    --shadow: rgba(61, 39, 168, .45);
+}
+
+/* ---------- 2) LIGHT (sky blue) ---------- */
+[data-theme="light"] {
+    --bg1: #e4f3ff;
+    --bg2: #bfe0ff;
+    --bg3: #e6f8ee;
+    --blob1: #5db3ff;
+    --blob2: #9be8c8;
+
+    --ink: #0f2740;
+    --muted: #4f6b88;
+    --card: #ffffff;
+    --soft: #f0f8ff;
+    --line: #d3e6f7;
+
+    --accent: #1b7fd1;
+    --accent-hover: #135f9e;
+    --on-accent: #ffffff;
+
+    --shadow: rgba(27, 127, 209, .4);
+}
+
+/* ---------- 3) DARK ---------- */
+[data-theme="dark"] {
+    --bg1: #0f0d1c;
+    --bg2: #261b52;
+    --bg3: #0f1c33;
+    --blob1: #6a4cff;
+    --blob2: #1fb8a0;
+
+    --ink: #eeeaff;
+    --muted: #a8a3cf;
+    --card: #1b1830;
+    --soft: #262240;
+    --line: #38325e;
+
+    --accent: #7a58f0;
+    --accent-hover: #9170ff;
+    --on-accent: #ffffff;
+
+    --high: #ff5c93;
+    --medium: #ffb02e;
+    --low: #6aa5ff;
+    --shadow: rgba(0, 0, 0, .6);
+}
+
+/* ---------- animated background (colour shift) ---------- */
+html { min-height: 100%; }
+
+body {
+    background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3), var(--bg1));
+    background-size: 300% 300%;
+    animation: bgShift 16s ease-in-out infinite;
+    color: var(--ink);
+}
+
+@keyframes bgShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* do blurry colour blobs jo halka sa tairtay hain */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .45;
+    pointer-events: none;
+}
+body::before { background: var(--blob1); top: -120px; left: -100px; animation: floatA 20s ease-in-out infinite alternate; }
+body::after  { background: var(--blob2); bottom: -140px; right: -120px; animation: floatB 24s ease-in-out infinite alternate; }
+
+@keyframes floatA { to { transform: translate(35vw, 30vh) scale(1.2); } }
+@keyframes floatB { to { transform: translate(-30vw, -25vh) scale(1.15); } }
+
+/* ---------- theme switcher ---------- */
+.theme-switch {
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+}
+.theme-switch.floating { position: fixed; top: 16px; right: 16px; z-index: 20; }
+
+.theme-switch button {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--sw);
+    cursor: pointer;
+    transition: transform .15s;
+}
+.theme-switch button:hover { transform: scale(1.15); }
+.theme-switch button.active { border-color: var(--ink); }
+.theme-switch button:focus-visible { outline: 3px solid var(--mint); outline-offset: 2px; }
+
+/* theme badalte waqt smooth change */
+.card, .sidebar, .task, .stat, .task-row, .topbar, .second input, .second select,
+.field input, .nav-item, .theme-switch, .empty {
+    transition: background-color .35s, color .35s, border-color .35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body, body::before, body::after { animation: none; }
+}

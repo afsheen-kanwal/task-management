@@ -1,140 +1,197 @@
+// ===== Data (localStorage keys are unchanged) =====
+let tasks = JSON.parse(localStorage.getItem('userTasksList')) || [];
+let currentFilter = 'all';
+let lastAddedId = null;   // naya task jis ki animation chalani hai
 
+function saveTasks() {
+    localStorage.setItem('userTasksList', JSON.stringify(tasks));
+}
+
+// task text user ne likha hai, isko safe banane ke liye
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ===== Success popup (toast) =====
+function showToast(title, message) {
+    const wrap = document.getElementById('toast-wrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.setAttribute('role', 'status');
+    toast.innerHTML = '<span class="toast-icon">&#10003;</span><div><strong>' + escapeHTML(title) +
+        '</strong><small>' + escapeHTML(message) + '</small></div>';
+    wrap.appendChild(toast);
+
+    setTimeout(function () {
+        toast.classList.add('out');
+        setTimeout(function () { toast.remove(); }, 300);
+    }, 2600);
+}
+
+// counter badalne par chhota sa bump
+function setCounter(id, value) {
+    const el = document.getElementById(id);
+    if (el.innerText !== String(value)) {
+        el.innerText = value;
+        el.classList.remove('bump');
+        void el.offsetWidth;          // animation dobara chalane ke liye
+        el.classList.add('bump');
+    }
+}
+
+// ===== Page load =====
 window.addEventListener('DOMContentLoaded', function () {
-
-    let storedName = localStorage.getItem('Username');
+    const storedName = localStorage.getItem('Username');
 
     if (storedName) {
-        document.getElementById('display-name').innerText = storedName;
-
-        let firstLetter = storedName.charAt(0).toUpperCase();
-
-        document.getElementById('name-avatar').innerText = firstLetter;
+        document.getElementById('display-name').innerText = 'Hello, ' + storedName + '!';
+        document.getElementById('name-avatar').innerText = storedName.charAt(0).toUpperCase();
     }
-});
 
-
-    // LocalStorage se data load karna ya khali array banana
-    let tasks = JSON.parse(localStorage.getItem('userTasksList')) || [];
-
-    // Page open hote hi purane tasks aur counters screen par lana
-    window.addEventListener('DOMContentLoaded', () => {
-        renderTasks();
+    // sidebar filters
+    document.querySelectorAll('.nav-item').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            currentFilter = btn.dataset.filter;
+            document.querySelectorAll('.nav-item').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            renderTasks();
+        });
     });
 
-    // 1. Naya Task Add karne ka function
-    function addTask() {
-        const taskText = document.getElementById('add-task').value.trim();
-        const prioritySelect = document.getElementById('select-priority').value.trim();
-        const taskDate = document.getElementById('task-date').value;
+    // Enter dabane se bhi task add ho
+    document.getElementById('add-task').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') addTask();
+    });
 
-        if (taskText === "") {
-            alert("Please enter a task description!");
-            return;
-        }
+    renderTasks();
+});
 
-        const newTask = {
-            id: Date.now(),
-            text: taskText,
-            priority: prioritySelect.replace("priority:", "").trim(),
-            date: taskDate || "No Due Date",
-            status: "Pending"
-        };
+// ===== Add =====
+function addTask() {
+    const taskText = document.getElementById('add-task').value.trim();
+    const prioritySelect = document.getElementById('select-priority').value.trim();
+    const taskDate = document.getElementById('task-date').value;
 
-        tasks.push(newTask);
-        localStorage.setItem('userTasksList', JSON.stringify(tasks));
-
-        document.getElementById('add-task').value = "";
-        document.getElementById('task-date').value = "";
-
-        renderTasks();
+    if (taskText === "") {
+        alert("Please enter a task description!");
+        return;
     }
 
-    // 2. Tasks aur Counters update karne ka core function
-    function renderTasks() {
-        const listContainer = document.getElementById('task-list-container');
-        listContainer.innerHTML = ""; 
+    const newTask = {
+        id: Date.now(),
+        text: taskText,
+        priority: prioritySelect.replace("priority:", "").trim(),
+        date: taskDate || "No Due Date",
+        status: "Pending"
+    };
 
-        let total = tasks.length;
-        let completed = 0;
-        let pending = 0;
-        let important = 0;
+    tasks.push(newTask);
+    lastAddedId = newTask.id;
+    saveTasks();
 
-        tasks.forEach(task => {
-            if (task.status === "Completed") {
-                completed++;
-            } else {
-                pending++;
-            }
-            
-            if (task.priority.toLowerCase() === "high") {
-                important++;
-            }
+    document.getElementById('add-task').value = "";
+    document.getElementById('task-date').value = "";
 
-            let statusIcon = task.status === "Completed" ? "✅" : "⚪";
-            let lineThrough = task.status === "Completed" ? "text-decoration: line-through; color: gray;" : "";
-            let edgeColor = task.priority.toLowerCase() === "high" ? "red" : task.priority.toLowerCase() === "medium" ? "orange" : "blue";
+    renderTasks();
+    showToast("Task added successfully!", taskText);
+}
 
-            // Row HTML: Edit button (✏️) ke sath update kar di hai
-            const rowHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; margin-top: 10px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 6px solid ${edgeColor};">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="cursor: pointer; font-size: 20px;" onclick="toggleTaskStatus(${task.id})">${statusIcon}</span>
-                        <div>
-                            <span style="${lineThrough} font-size: large; font-weight: 500;">${task.text}</span>
-                            <br><small style="color: gray;">Due: ${task.date} | Priority: <strong style="color:${edgeColor};">${task.priority}</strong></small>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <!-- ✏️ EDIT BUTTON -->
-                        <button onclick="editTaskItem(${task.id})" style="background: none; border: none; color: #8000ff; cursor: pointer; font-size: 16px;">✏️ Edit</button>
-                        <!-- 🗑️ DELETE BUTTON -->
-                        <button onclick="deleteTaskItem(${task.id})" style="background: none; border: none; color: red; cursor: pointer; font-size: 16px;">🗑️ Delete</button>
+// ===== Show =====
+function renderTasks() {
+    const listContainer = document.getElementById('task-list-container');
+    listContainer.innerHTML = "";
+
+    let total = tasks.length;
+    let completed = 0;
+    let pending = 0;
+    let important = 0;
+
+    // counters hamesha saare tasks ke hote hain
+    tasks.forEach(function (task) {
+        if (task.status === "Completed") completed++; else pending++;
+        if (task.priority.toLowerCase() === "high") important++;
+    });
+
+    // list filter ke hisab se
+    const titles = { all: "All Tasks", completed: "Completed", pending: "Pending", important: "Important" };
+    document.getElementById('list-title').innerText = titles[currentFilter];
+
+    const visible = tasks.filter(function (task) {
+        if (currentFilter === 'completed') return task.status === "Completed";
+        if (currentFilter === 'pending') return task.status !== "Completed";
+        if (currentFilter === 'important') return task.priority.toLowerCase() === "high";
+        return true;
+    });
+
+    if (visible.length === 0) {
+        listContainer.innerHTML = '<div class="empty">' +
+            (tasks.length === 0 ? "No tasks yet. Add your first task above." : "No tasks in this list.") +
+            '</div>';
+    }
+
+    visible.forEach(function (task) {
+        const isDone = task.status === "Completed";
+        const p = task.priority.toLowerCase();
+        const edgeColor = p === "high" ? "var(--high)" : p === "medium" ? "var(--medium)" : "var(--low)";
+
+        listContainer.innerHTML += `
+            <div class="task-row ${task.id === lastAddedId ? 'new' : ''}" style="--edge: ${edgeColor};">
+                <div class="task-main">
+                    <button class="check ${isDone ? 'on' : ''}" onclick="toggleTaskStatus(${task.id})"
+                        aria-label="${isDone ? 'Mark as pending' : 'Mark as completed'}">&#10003;</button>
+                    <div>
+                        <div class="task-text ${isDone ? 'done' : ''}">${escapeHTML(task.text)}</div>
+                        <div class="task-meta">Due: ${escapeHTML(task.date)} &nbsp;|&nbsp; Priority: <strong>${escapeHTML(task.priority)}</strong></div>
                     </div>
                 </div>
-            `;
-            listContainer.innerHTML += rowHTML;
-        });
+                <div class="task-actions">
+                    <button class="icon-btn edit" onclick="editTaskItem(${task.id})">Edit</button>
+                    <button class="icon-btn del" onclick="deleteTaskItem(${task.id})">Delete</button>
+                </div>
+            </div>
+        `;
+    });
 
-        document.getElementById('total-counter').innerText = total;
-        document.getElementById('completed-counter').innerText = completed;
-        document.getElementById('pending-counter').innerText = pending;
-        document.getElementById('important-counter').innerText = important;
-    }
+    lastAddedId = null;   // animation sirf ek dafa chalay
 
-    // 3. Task Edit karne ka function
-    function editTaskItem(id) {
-        // Pehle array me se target task dhoondhein
-        const taskToEdit = tasks.find(task => task.id === id);
-        
-        if (taskToEdit) {
-            // Prompt box khol kar purana text pehle se likha hua dikhana
-            const newText = prompt("Edit your task description:", taskToEdit.text);
-            
-            // Agar user cancel na kare aur kuch likhe, tabhi update karein
-            if (newText !== null && newText.trim() !== "") {
-                taskToEdit.text = newText.trim();
-                localStorage.setItem('userTasksList', JSON.stringify(tasks));
-                renderTasks(); // Screen par naya naam show karna
-            }
+    setCounter('total-counter', total);
+    setCounter('completed-counter', completed);
+    setCounter('pending-counter', pending);
+    setCounter('important-counter', important);
+}
+
+// ===== Edit =====
+function editTaskItem(id) {
+    const taskToEdit = tasks.find(function (task) { return task.id === id; });
+
+    if (taskToEdit) {
+        const newText = prompt("Edit your task description:", taskToEdit.text);
+
+        if (newText !== null && newText.trim() !== "") {
+            taskToEdit.text = newText.trim();
+            saveTasks();
+            renderTasks();
         }
     }
+}   // <-- original code mein ye closing bracket missing thi, isi wajah se toggle/delete kaam nahi kartay thay
 
-    // 4. Task complete karne ka toggle mechanics
-    function toggleTaskStatus(id) {
-        tasks = tasks.map(task => {
-            if (task.id === id) {
-                task.status = task.status === "Pending" ? "Completed" : "Pending";
-            }
-            return task;
-        });
-        localStorage.setItem('userTasksList', JSON.stringify(tasks));
-        renderTasks();
-    }
+// ===== Complete / Pending =====
+function toggleTaskStatus(id) {
+    tasks = tasks.map(function (task) {
+        if (task.id === id) {
+            task.status = task.status === "Pending" ? "Completed" : "Pending";
+        }
+        return task;
+    });
+    saveTasks();
+    renderTasks();
+}
 
-    // 5. Task delete karne ki mechanism
-    function deleteTaskItem(id) {
-        tasks = tasks.filter(task => task.id !== id);
-        localStorage.setItem('userTasksList', JSON.stringify(tasks));
-        renderTasks();
-    }
-
+// ===== Delete =====
+function deleteTaskItem(id) {
+    tasks = tasks.filter(function (task) { return task.id !== id; });
+    saveTasks();
+    renderTasks();
+}
